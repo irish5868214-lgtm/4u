@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Birthday Surprise 💖</title>
+    <style>
+        :root {
+            --primary-pink: #ff85a1;
+            --soft-pink: #fbb1bd;
+            --bg-color: #E0FFFF;
+            --text-color: #5d5d5d;
+            --accent-gold: #d4af37;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Floating Hearts Background */
+        .heart {
+            position: absolute;
+            color: var(--primary-pink);
+            font-size: 20px;
+            animation: float 4s linear infinite;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 850px;
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+
+        /* First Page: 3 Gift Boxes */
+        .gift-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .gift-wrapper {
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gift-wrapper:hover { transform: scale(1.05); }
+
+        .gift-icon {
+            font-size: 80px;
+            display: block;
+        }
+
+        .gift-label {
+            display: block;
+            margin-top: 10px;
+            color: var(--primary-pink);
+            font-weight: bold;
+            font-size: 14px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        /* Second Page: Card Frame */
+        .card-frame {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 133, 161, 0.2);
+            border: 6px double var(--soft-pink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 25px;
+            text-align: left;
+        }
+
+        .card-img-frame {
+            position: relative;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transform: rotate(-3deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            min-width: 160px;
+            min-height: 160px;
+            overflow: hidden;
+        }
+
+        /* Multiple images side-by-side */
+        .multi-img {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        /* ကွန်ပျူတာမှာပြသမယ့် ဗီဒီယိုပုံစံ - အလျားကျဉ်းပြီး ဒေါင်လိုက် (အနံ) ရှည်ပေးထားပါတယ် */
+        .card-video {
+            width: 240px;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            background: #000;
+        }
+
+        .card-text {
+            flex: 1;
+            color: var(--text-color);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: var(--primary-pink);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover { background-color: #ff5e84; }
+
+        /* ဖုန်းမျက်နှာပြင်အတွက် ဒေါင်လိုက်ဗီဒီယိုအချိုး (Responsive) ပြင်ဆင်မှု */
+        @media (max-width: 600px) {
+            .card-content { flex-direction: column; text-align: center; }
+            .card-img { width: 180px; height: 180px; }
+            
+            /* ဖုန်းမှာကြည့်ရင် အလျားသိပ်မကျယ်ဘဲ အောက်ကို ဒေါင်လိုက်အရှည်ဆင်းသွားစေဖို့ */
+            .card-video { 
+                width: 70%;  /* ဖုန်းမျက်နှာပြင်အကျယ်ရဲ့ ၇၀ ရာခိုင်နှုန်းပဲ ယူမယ် */
+                max-width: 260px;
+                height: auto; 
+                aspect-ratio: 9 / 16; /* TikTok / Stories တွေလို ဒေါင်လိုက် Format ပုံသေသွင်းခြင်း */
+            }
+            
+            .gift-icon { font-size: 60px; }
+            .card-img-frame { transform: rotate(0deg); min-width: auto; min-height: auto; padding: 6px; width: auto; }
+            .multi-img { gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+<audio id="bgm" loop>
+  <source src="daylight.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+window.addEventListener("click", () => {
+  const music = document.getElementById("bgm");
+  music.play();
+}, { once: true });
+</script>
+
+    <div id="page1" class="container">
+        <h1 style="color: var(--primary-pink); text-shadow: 1px 1px white;">Choose Your Gift 🎁</h1>
+         <p style="color: #2F4F4F;">Happy Birthday prr Kk❤️</p>
+        
+        <p style="color: #2F4F4F;">ပုံးလေးတွေကို တစ်ခုချင်းနှိပ်ကြည့်ပါဦးနော်</p>
+        
+        <div class="gift-container">
+            <div class="gift-wrapper" onclick="openGift(0)">
+                <span class="gift-icon">🎁</span>
+                <span class="gift-label">Box 1</span>
+            </div>
+            <div class="gift-wrapper" onclick="openGift(1)">
+                <span class="gift-icon">🎀</span>
+                <span class="gift-label">Box 2</span>
+            </div>
+            <div class="gift-wrapper" onclick="openGift(2)">
+                <span class="gift-icon">💝</span>
+                <span class="gift-label">Box 3</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="page2" class="container hidden">
+        <div class="card-frame">
+            <div class="card-content">
+                <div class="card-img-frame" id="card-media">
+                    </div>
+                <div class="card-text">
+                    <p id="display-wish"></p>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBack()">နောက်ထပ်ပုံးဖွင့်မယ် ➔</button>
+        </div>
+    </div>
+
+    <script>
+        const giftData = [
+            {
+                imgs: ["hand.jpg"],
+                wish: "<b>Wish You</b><br>Happy birthday 🎂 husband 20”ပြည့်ကနေစပြီး လိုအင်ဆန္ဒတွေပြည့်ဝ ပါစေ ဘဝကိူ အေးဆေးဖြတ်သန်းနိုင်စေနော်"
+            },
+            {
+                imgs: ["withyou.jpg"],
+                wish: "<b>For You</b><br>Husband လို့ခေါ်ရမှာနည်းလေး 😖ရှုက်မိတယ် Kk နဲ့အတောက်ပဆုံးနေ့ရက်များကိူအတူတူဖြတ်သန်းသွားကြမယ်နော် 💕"
+            },
+            {
+                wish: "<b>For You</b><br>မနက်နိုးလာတိုင်း husband kiss ရတဲ့နေ့က 🤪ရက်ရာဇာဘဲ မုန့်များကြီးကျွေးနိူင်ပါစေ နော်Love you more than husband 💝"
+            }
+        ];
+
+        function openGift(index) {
+            const data = giftData[index];
+            const mediaFrame = document.getElementById('card-media');
+            mediaFrame.innerHTML = ''; 
+
+            if (data.imgs && Array.isArray(data.imgs)) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'multi-img';
+                data.imgs.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = 'photo';
+                    img.className = 'card-img';
+                    wrapper.appendChild(img);
+                });
+                mediaFrame.appendChild(wrapper);
+            } else if (index === 2) {
+                const video = document.createElement('video');
+                video.className = 'card-video';
+                video.controls = true;
+                video.autoplay = false;
+                
+                const source1 = document.createElement('source');
+                source1.src = 'koko.mp4';
+                source1.type = 'video/mp4';
+                video.appendChild(source1);
+
+                
+                mediaFrame.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = '';
+                img.className = 'card-img';
+                mediaFrame.appendChild(img);
+            }
+
+            document.getElementById('display-wish').innerHTML = data.wish;
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page1').classList.remove('hidden');
+            document.getElementById('card-media').innerHTML = ''; 
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
