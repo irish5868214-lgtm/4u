@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Confession Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0a15 0%, #1a0f25 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(135deg, rgba(60, 30, 80, 0.9) 0%, rgba(45, 20, 70, 0.9) 100%);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            text-align: center;
+            display: none;
+            border: 2px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Page 1 - Confession */
+        #page1 {
+            color: #e9d5ff;
+        }
+
+        .character-gif {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+        }
+
+        .question {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #fbbf24;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.6);
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-continue:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+
+        /* Page 2 - She's Crying */
+        #page2 {
+            color: #e9d5ff;
+        }
+
+        .message {
+            font-size: 18px;
+            margin: 20px 0;
+            color: #d8b4fe;
+            line-height: 1.6;
+        }
+
+        /* Page 3 - Game */
+        #page3 {
+            color: #e9d5ff;
+            position: relative;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(14, 165, 233, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .mission {
+            font-size: 18px;
+            font-weight: bold;
+            color: #06b6d4;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 8px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4 0%, #22d3ee 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+        }
+
+        .game-canvas {
+            background: linear-gradient(135deg, rgba(15, 10, 21, 0.8) 0%, rgba(25, 10, 35, 0.8) 100%);
+            border-radius: 20px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            touch-action: none;
+            user-select: none;
+        }
+
+        .chicken {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 60px;
+            z-index: 10;
+            user-select: none;
+            cursor: grab;
+            filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.4));
+        }
+
+        .chicken:active {
+            cursor: grabbing;
+        }
+
+        .falling-egg {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            user-select: none;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.4));
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(400px) rotate(360deg);
+            }
+        }
+
+        .combo-text {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 2px 2px 8px rgba(251, 191, 36, 0.6);
+            pointer-events: none;
+            animation: popUp 1s ease-out forwards;
+            z-index: 20;
+        }
+
+        @keyframes popUp {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -150%) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .score-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(6, 182, 212, 0.15);
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: #06b6d4;
+            font-weight: bold;
+            z-index: 5;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .game-button:hover {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Page 4 - Final Message */
+        #page4 {
+            color: #e9d5ff;
+        }
+
+        .final-message {
+            font-size: 20px;
+            color: #d8b4fe;
+            line-height: 1.8;
+            margin: 30px 0;
+        }
+
+        .stars {
+            font-size: 30px;
+            margin: 20px 0;
+        }
+
+        .ending-text {
+            font-size: 16px;
+            color: #fbbf24;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* No button escape animation */
+        .btn-no.escape {
+            position: fixed;
+        }
+
+        .instruction {
+            font-size: 14px;
+            color: #d8b4fe;
+            margin-top: 15px;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .catch-message {
+            position: absolute;
+            font-size: 36px;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 2px 2px 8px rgba(251, 191, 36, 0.6);
+            pointer-events: none;
+            animation: fadeOutUp 1.5s ease-out forwards;
+            z-index: 25;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fadeOutUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -200%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgm" loop>
+        <source src="double.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        window.addEventListener("click", () => {
+            const music = document.getElementById("bgm");
+            music.play();
+        }, { once: true });
+    </script>
+
+    <!-- Page 1: Confession -->
+    <div class="container active" id="page1">
+        <img src="bae.gif" alt="sad" class="character-gif">
+        <div class="question">I Miss You ❤️</div>
+        <p style="margin: 15px 0; color: #d8b4fe; font-size: 14px;">
+Bae kaw bai wa rit yaw 🥺</p>
+        <div class="button-group">
+            <button class="btn-yes" onclick="goToPage(2)">wa na</button>
+            <button class="btn-no" id="noBtn" onclick="escapeNo()">n-wa ai</button>
+        </div>
+    </div>
+
+    <!-- Page 2: Acceptance -->
+    <div class="container" id="page2">
+        <img src="baby.gif" alt="happy" class="character-gif">
+        <div class="question">Bae kaw wa ai majaw kabu sai 💕</div>
+        <div class="message">Lagawn shabran U-di rim 
+gasup u yaw U-di 10 hpring hkra rim u luu yaw
+        </div>
+        <button class="btn-continue" onclick="goToPage(3)">ဆက်ကြည့်မည် 🎮</button>
+    </div>
+
+    <!-- Page 3: Game -->
+    <div class="container" id="page3">
+        <div style="margin-bottom: 20px;">
+            <div class="question">ကြက်ဥဖမ်းပါ! 🥚</div>
+        </div>
+        
+        <div class="game-info">
+            <span class="mission">အမှတ်ပြည့်: <span id="gameScore">0</span>/10</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="game-canvas" id="gameCanvas">
+            <div class="score-display">Total: <span id="missionCount">0</span> / 10</div>
+            <div class="chicken" id="chicken">🐔</div>
+        </div>
+
+        <div class="instruction">💡 ကြက်ကို ဆွဲရွှေ့ခြင်းဖြင့် ကြက်ဥများကိုဖမ်းယူပါ</div>
+
+        <button class="game-button" onclick="startGame()">ဂိမ်းစမည် 🎮</button>
+    </div>
+
+    <!-- Page 4: Final -->
+    <div class="container" id="page4">
+        <img src="bu3.gif" alt="celebration" class="character-gif">
+        <div class="question">Tsawra ai yaw💕</div>
+        
+        <div class="final-message">Manga yee Bae grai Tau Ban 
+ Ai yaw Manga myit n pyaw   hkra Bae n tsun na yaw 
+Bae kaw bai wa rit le yaw 
+Manga yee😭🫶
+        </div>
+
+        <div class="stars">💕 💕 💕</div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let gameScore = 0;
+        let missionCount = 0;
+        const maxMission = 10;
+        let gameActive = false;
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let chickenX = 0;
+        let chickenY = 0;
+        let eggsFalling = [];
+
+        const gameCanvas = document.getElementById('gameCanvas');
+
+        function goToPage(page) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.getElementById('page' + page).classList.add('active');
+            currentPage = page;
+
+            if (page === 4) {
+                checkGameCompletion();
+            }
+        }
+
+        function escapeNo() {
+            const btn = document.getElementById('noBtn');
+            const randomX = Math.random() * (window.innerWidth - 100);
+            const randomY = Math.random() * (window.innerHeight - 50);
+            
+            btn.style.position = 'fixed';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+
+        function startGame() {
+            gameScore = 0;
+            missionCount = 0;
+            gameActive = true;
+            eggsFalling = [];
+            document.getElementById('gameScore').textContent = '0';
+            document.getElementById('missionCount').textContent = '0';
+            document.getElementById('progressFill').style.width = '0%';
+            
+            // Reset game canvas
+            gameCanvas.innerHTML = '<div class="score-display">Total: <span id="missionCount">0</span> / 10</div><div class="chicken" id="chicken">🐔</div>';
+            
+            chickenX = gameCanvas.offsetWidth / 2;
+            chickenY = gameCanvas.offsetHeight - 60;
+            
+            setupChickenControl();
+            
+            // Create falling eggs continuously
+            let eggCount = 0;
+            const eggInterval = setInterval(() => {
+                if (gameActive && eggCount < 15) {
+                    createFallingEgg();
+                    eggCount++;
+                } else if (eggCount >= 15) {
+                    clearInterval(eggInterval);
+                }
+            }, 400);
+        }
+
+        function setupChickenControl() {
+            const chicken = document.getElementById('chicken');
+            if (!chicken) return;
+            
+            // Mouse events
+            chicken.addEventListener('mousedown', (e) => {
+                if (!gameActive) return;
+                isDragging = true;
+                const rect = chicken.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+            });
+
+            // Touch events
+            chicken.addEventListener('touchstart', (e) => {
+                if (!gameActive) return;
+                isDragging = true;
+                const touch = e.touches[0];
+                const rect = chicken.getBoundingClientRect();
+                dragOffsetX = touch.clientX - rect.left;
+                dragOffsetY = touch.clientY - rect.top;
+            });
+        }
+
+        document.addEventListener('mousemove', moveChicken);
+        document.addEventListener('touchmove', moveChicken, { passive: false });
+
+        function moveChicken(e) {
+            if (!isDragging || !gameActive) return;
+            
+            e.preventDefault();
+            const chicken = document.getElementById('chicken');
+            if (!chicken) return;
+
+            const canvasRect = gameCanvas.getBoundingClientRect();
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+            let newX = clientX - canvasRect.left - dragOffsetX;
+            let newY = clientY - canvasRect.top - dragOffsetY;
+
+            // Keep chicken within bounds
+            newX = Math.max(0, Math.min(newX, canvasRect.width - 60));
+            newY = Math.max(0, Math.min(newY, canvasRect.height - 60));
+
+            chickenX = newX;
+            chickenY = newY;
+
+            chicken.style.position = 'absolute';
+            chicken.style.left = newX + 'px';
+            chicken.style.bottom = 'auto';
+            chicken.style.top = newY + 'px';
+            chicken.style.transform = 'none';
+
+            // Check collision with eggs
+            checkCollisions();
+        }
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        function createFallingEgg() {
+            if (!gameActive) return;
+
+            const egg = document.createElement('div');
+            egg.className = 'falling-egg';
+            egg.textContent = '🥚';
+            
+            const startX = Math.random() * (gameCanvas.offsetWidth - 40);
+            egg.style.left = startX + 'px';
+            egg.style.top = '-40px';
+            
+            const duration = 3 + Math.random() * 2;
+            egg.style.animationDuration = duration + 's';
+            
+            gameCanvas.appendChild(egg);
+
+            const eggData = {
+                element: egg,
+                startX: startX,
+                startTime: Date.now(),
+                duration: duration,
+                startY: -40
+            };
+
+            eggsFalling.push(eggData);
+
+            // Remove egg after animation
+            setTimeout(() => {
+                if (egg.parentNode) {
+                    egg.remove();
+                }
+                eggsFalling = eggsFalling.filter(e => e.element !== egg);
+            }, duration * 1000);
+        }
+
+        function checkCollisions() {
+            const chicken = document.getElementById('chicken');
+            if (!chicken || !gameActive) return;
+
+            const chickenRect = chicken.getBoundingClientRect();
+            const eggsCopy = [...eggsFalling];
+
+            eggsCopy.forEach(eggData => {
+                const eggElement = eggData.element;
+                if (!eggElement || !eggElement.parentNode) return;
+
+                const eggRect = eggElement.getBoundingClientRect();
+                
+                const distance = Math.hypot(
+                    eggRect.left - chickenRect.left,
+                    eggRect.top - chickenRect.top
+                );
+
+                if (distance < 100) {
+                    catchEgg(eggElement);
+                }
+            });
+        }
+
+        function catchEgg(egg) {
+            missionCount++;
+            
+            // Update score displays
+            document.getElementById('gameScore').textContent = missionCount;
+            document.getElementById('missionCount').textContent = missionCount;
+            
+            const progress = (missionCount / maxMission) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Show feedback messages based on count
+            const messages = [
+                '1လုံးမိရင် ဝါးးး',
+                '2လုံးမိရင် တော်တယ်',
+                '3လုံးမိရင် ဆက်ကြိုးစား'
+            ];
+
+            let message = '';
+            if (missionCount === 1) {
+                message = messages[0];
+            } else if (missionCount === 2) {
+                message = messages[1];
+            } else if (missionCount === 3) {
+                message = messages[2];
+            } else if (missionCount === 10) {
+                message = 'အကုန်ဖမ်းမိရင် အတော်ဆုံးပဲ!';
+            }
+
+            // Show combo text with message
+            const combo = document.createElement('div');
+            combo.className = 'combo-text';
+            combo.textContent = `${missionCount}/10 - ${message}`;
+            combo.style.fontSize = '32px';
+            const eggRect = egg.getBoundingClientRect();
+            const canvasRect = gameCanvas.getBoundingClientRect();
+            combo.style.left = (eggRect.left - canvasRect.left) + 'px';
+            combo.style.top = (eggRect.top - canvasRect.top) + 'px';
+            
+            gameCanvas.appendChild(combo);
+            
+            setTimeout(() => combo.remove(), 1500);
+            
+            egg.remove();
+            eggsFalling = eggsFalling.filter(e => e.element !== egg);
+
+            if (missionCount >= maxMission) {
+                gameActive = false;
+                setTimeout(() => {
+                    goToPage(4);
+                }, 500);
+            }
+        }
+
+        function checkGameCompletion() {
+            if (missionCount >= maxMission) {
+                document.getElementById('page4').classList.add('active');
+            }
+        }
+
+        // Initialize chicken control
+        setupChickenControl();
+    </script>
+</body>
+</html>
